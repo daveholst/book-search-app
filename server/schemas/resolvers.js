@@ -4,11 +4,15 @@ const { User } = require ('../models')
 const resolvers = {
   Query: {
     getUser: async (parent, params) => {
-      console.log(params);
-      return User.findOne({ _id: params.id });
+      try {
+        console.log(params);
+        return User.findOne({ _id: params.id });
+
+      } catch (error) {
+        console.error(error);
+      }
     },
-    test: () => 'TEST MESSAGE'
   },
-}
+};
 
 module.exports = resolvers;

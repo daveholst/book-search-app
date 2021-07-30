@@ -8,7 +8,7 @@ const typeDefs = gql`
     email: String!
     password: String!
     # Pretty sure this virtual field returns an Int back
-    bookCount: String
+    bookCount: Int
     savedBooks: [Book]
   }
 
@@ -22,13 +22,8 @@ const typeDefs = gql`
     title: String!
   }
 
-  type Test {
-    message: String
-  }
-
   type Query {
     getUser(id: ID!): User
-    test: Test
   }
 
 `

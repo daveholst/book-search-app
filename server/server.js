@@ -1,36 +1,33 @@
 const express = require('express');
 // bring apollo server in
 const { ApolloServer } = require('apollo-server-express');
-
 const path = require('path');
+
+const { typeDefs, resolvers } = require('./schemas');
 const db = require('./config/connection');
 // * leave in place for now, will be eventually redundant??
-// const routes = require('./routes');
+// const route`s = require('./routes');
 // bring in apollo schema.
-const { typeDefs, resolovers } = require('./schemas');
 
 const PORT = process.env.PORT || 3001;
 const app = express();
 
 // ! had to do this due to some weird issue in v3 of
 
-// const apolloServer = (async function startApolloServer() {
-//   // create apollo server
+const apolloServer = (async function startApolloServer() {
+  //   // create apollo server
   const apolloServer = new ApolloServer({
     typeDefs,
-    resolovers
+    resolvers
   })
 
-  // apolloServer.start();
+  await apolloServer.start();
 
-  // apple as middleware, but backwards >.<
   apolloServer.applyMiddleware({ app });
 
-  // return apolloServer;
-// })()
+  return apolloServer
 
-// startApolloServer();
-
+})()
 
 
 app.use(express.urlencoded({ extended: true }));
