@@ -34,6 +34,7 @@ const resolvers = {
 
       // create a user, sign a token, and send it back (to client/src/components/SignUpForm.js)
     createUser: async (parent, args) => {
+      console.log('CREATE USER FIRED');
       const user = await User.create(args);
 
       if (!user) {
