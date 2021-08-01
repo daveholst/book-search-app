@@ -8,14 +8,18 @@ const resolvers = {
   Query: {
     // ! do I need this in here????
     me: async (parent, _args, context) => {
+
       console.log('my user context :( ',context.user);
 
       if (context.user) {
-        const result = await User.findOne({ _id: context.user._id }).populate('thoughts');
+        const result = await User.findOne({ _id: context.user._id });
         // console.log(result);
         return result;
       }
       throw new AuthenticationError('You need to be logged in!');
+
+
+
     },
     // get a single user by either their id or their username
     getSingleUser: async (parent, {_id, username}) => {
@@ -56,6 +60,8 @@ const resolvers = {
         throw new AuthenticationError('Incorrect Password')
       }
       const token = signToken(user);
+      console.log('token', token)
+      console.log('user', user);
       return({ token, user });
     },
   }
