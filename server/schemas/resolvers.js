@@ -64,6 +64,21 @@ const resolvers = {
       console.log('user', user);
       return({ token, user });
     },
+    // save a book to a user's `savedBooks` field by adding it to the set (to prevent duplicates)
+    saveBook: async (parent, args) => {
+      const updatedUser = await User.findOneAndUpdate(
+        { _id: args._id },
+        // ! what to put here???
+        { $addToSet: { savedBooks: args.bookInfo } },
+        { new: true, runValidators: true }
+      );
+      if (!updatedUser) {
+        throw new AuthenticationError('Could not add book to user')
+      }
+      const token = signToken(updatedUser);
+      return({ token, updatedUser });
+
+    }
   }
 };
 
