@@ -13,7 +13,7 @@ module.exports = {
     if (!token) {
       return req;
     }
-    console.log(token);
+    // console.log(token);
 
     try {
       const { data } = jwt.verify(token, secret, { maxAge: expiration });
