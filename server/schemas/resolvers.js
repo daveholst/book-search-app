@@ -44,8 +44,13 @@ const resolvers = {
       if (!user) {
         throw new AuthenticationError('Could not create user')
       }
+
       const token = signToken(user);
+      console.log('token: ', token)
+      console.log('user: ', user)
       return({ token, user });
+
+
     },
     // login a user, sign a token, and send it back (to client/src/components/LoginForm.js)
     login: async (parent, args) => {
