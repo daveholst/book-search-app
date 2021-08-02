@@ -11,15 +11,39 @@ import {REMOVE_BOOK} from '../utils/mutations'
 import { removeBookId } from '../utils/localStorage';
 
 const SavedBooks = () => {
-  const [bookRemoveCount, setBookRemoveCount] = useState(0)
+  // const [bookSavedCount, setBookSavedCount] = useState(0)
   // const [userData, setUserData] = useState({});
-  const [removeBook, { error: bookError, data: bookData }] = useMutation(REMOVE_BOOK);
+  // ! tried to add caching
+  const [removeBook, { error: bookError, data: bookData }] = useMutation(REMOVE_BOOK, {
+    // ! try first with a refetch instead of caching?
+    refetchQueries: [{query: GET_ME}]
+    // update(cache, { data: { addThought } }) {
+    //   try {
+    //     const { thoughts } = cache.readQuery({ query: QUERY_THOUGHTS });
+
+    //     cache.writeQuery({
+    //       query: QUERY_THOUGHTS,
+    //       data: { thoughts: [addThought, ...thoughts] },
+    //     });
+    //   } catch (e) {
+    //     console.error(e);
+    //   }
+
+    //   // update me object's cache
+    //   const { me } = cache.readQuery({ query: QUERY_ME });
+    //   cache.writeQuery({
+    //     query: QUERY_ME,
+    //     data: { me: { ...me, thoughts: [...me.thoughts, addThought] } },
+    //   });
+    // },
+  });
   const { loading, error: userError, data: userData }= useQuery(GET_ME,
     // !changed fetch policy so that a query to the API is forced.
     // !not does not rely on cache, but will still update cache
-    // { fetchPolicy: "network-only" }
+    // { fetchPolicy: "network-only" },
+    // { onCompleted: (data) => setBookSavedCount(data.me.savedBooks.length)}
   );
-
+  // console.log(bookSavedCount)
   // create function that accepts the book's mongo _id value as param and deletes the book from the database
   const handleDeleteBook = async (bookId) => {
     // const token = Auth.loggedIn() ? Auth.getToken() : null;
@@ -38,6 +62,7 @@ const SavedBooks = () => {
       }
       // upon success, remove book's id from localStorage
       removeBookId(bookId);
+      // window.location.reload()
     } catch (err) {
       console.error(err);
     }
