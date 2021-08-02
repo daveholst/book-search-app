@@ -13,7 +13,9 @@ const SavedBooks = () => {
   // const [userData, setUserData] = useState({});
 
   const {loading, error, data } = useQuery(GET_ME,
-    {});
+    // !changed fetch policy so that a query to the API is forced.
+    // !not does not rely on cache, but will still update cache
+    { fetchPolicy: "network-only" });
 
   // const { loading, error, data } = useQuery(GET_ME);
 
@@ -73,6 +75,12 @@ const SavedBooks = () => {
   // };
 
   // if data isn't here yet, say so
+  // ! added error handling
+  if (error) {
+    return <h2>{error.message}</h2>;
+  }
+
+
   // ! changed to loading
   if (loading) {
     return <h2>LOADING...</h2>;
