@@ -12,11 +12,11 @@ import { removeBookId } from '../utils/localStorage';
 const SavedBooks = () => {
   // const [userData, setUserData] = useState({});
 
-  const {loading, error, data } = useQuery(GET_ME,
+  const { loading, error, data: userData }= useQuery(GET_ME,
     // !changed fetch policy so that a query to the API is forced.
     // !not does not rely on cache, but will still update cache
-    { fetchPolicy: "network-only" });
-
+    { fetchPolicy: "network-only" }
+  );
   // const { loading, error, data } = useQuery(GET_ME);
 
 //   useEffect(() => {
@@ -86,7 +86,7 @@ const SavedBooks = () => {
     return <h2>LOADING...</h2>;
   }
 
-  if (data)
+  if (userData)
     return (
     <>
       <Jumbotron fluid className='text-light bg-dark'>
@@ -96,12 +96,12 @@ const SavedBooks = () => {
       </Jumbotron>
       <Container>
         <h2>
-          {data.me.savedBooks.length
-            ? `Viewing ${data.me.savedBooks.length} saved ${data.me.savedBooks.length === 1 ? 'book' : 'books'}:`
+          {userData.me.savedBooks.length
+            ? `Viewing ${userData.me.savedBooks.length} saved ${userData.me.savedBooks.length === 1 ? 'book' : 'books'}:`
             : 'You have no saved books!'}
         </h2>
         <CardColumns>
-          {data.me.savedBooks.map((book) => {
+          {userData.me.savedBooks.map((book) => {
             return (
               <Card key={book.bookId} border='dark'>
                 {book.image ? <Card.Img src={book.image} alt={`The cover for ${book.title}`} variant='top' /> : null}

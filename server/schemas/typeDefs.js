@@ -45,6 +45,7 @@ const typeDefs = gql`
       title: String!
 
       ): Book
+    removeBook(bookId: String!): Book
   }
 
 `

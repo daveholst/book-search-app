@@ -91,9 +91,26 @@ const resolvers = {
       } catch (error) {
         console.error(error)
       }
+    },
+    removeBook: async (parent, args, context) => {
+      try {
+      const updatedUser = await User.findOneAndUpdate(
+        { _id: context.user._id },
+        { $pull: { savedBooks: { bookId: args.bookId } } },
+        // ! wanted to return the old book
+        // { new: true }
+      );
+      if (!updatedUser) {
+        throw new AuthenticationError('Could not add book to user')
+      }
+      const token = signToken(updatedUser);
+      return(updatedUser.savedBooks[(updatedUser.savedBooks.length -1 )]);
 
-
+    } catch (error) {
+      console.error(error)
     }
+
+    },
   }
 };
 
