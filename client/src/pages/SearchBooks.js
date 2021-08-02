@@ -68,14 +68,6 @@ const SearchBooks = () => {
     // find the book in `searchedBooks` state by the matching id
     const bookToSave = searchedBooks.find((book) => book.bookId === bookId);
 
-    // get token
-    // ! no longer erquired with new auth system
-    // const token = Auth.loggedIn() ? Auth.getToken() : null;
-
-    // if (!token) {
-    //   return false;
-    // }
-    console.log(bookToSave)
     try {
       const { data } = await saveBook({
         variables: {
