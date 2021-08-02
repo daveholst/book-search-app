@@ -31,8 +31,6 @@ const typeDefs = gql`
     me: User
   }
 
-  union BookUser = Book | User
-
   type Mutation {
     addUser(username: String!, email: String!, password: String!): Auth
     login(email: String, username: String, password: String!): Auth
@@ -44,8 +42,8 @@ const typeDefs = gql`
       link: String,
       title: String!
 
-      ): Book
-    removeBook(bookId: String!): Book
+      ): User
+    removeBook(bookId: String!): User
   }
 
 `

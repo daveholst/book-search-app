@@ -56,8 +56,7 @@ const resolvers = {
         if (!updatedUser) {
           throw new AuthenticationError('Could not add book to user')
         }
-        const token = signToken(updatedUser);
-        return(updatedUser.savedBooks[(updatedUser.savedBooks.length -1 )]);
+        return(updatedUser);
 
       } catch (error) {
         console.error(error)
@@ -69,13 +68,13 @@ const resolvers = {
         { _id: context.user._id },
         { $pull: { savedBooks: { bookId: args.bookId } } },
         // ! wanted to return the old book
-        // { new: true }
+        { new: true }
       );
       if (!updatedUser) {
         throw new AuthenticationError('Could not add book to user')
       }
-      const token = signToken(updatedUser);
-      return(updatedUser.savedBooks[(updatedUser.savedBooks.length -1 )]);
+      // const token = signToken(updatedUser);
+      return(updatedUser);
 
     } catch (error) {
       console.error(error)
