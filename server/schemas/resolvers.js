@@ -93,6 +93,7 @@ const resolvers = {
       }
     },
     removeBook: async (parent, args, context) => {
+      console.log('REMOVE BOOK FIRED');
       try {
       const updatedUser = await User.findOneAndUpdate(
         { _id: context.user._id },

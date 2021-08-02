@@ -4,80 +4,48 @@ import { Jumbotron, Container, CardColumns, Card, Button } from 'react-bootstrap
 import { getMe, deleteBook } from '../utils/API';
 import Auth from '../utils/auth';
 // !bring in apollo client
-import { useQuery } from '@apollo/client';
+import { useQuery, useMutation } from '@apollo/client';
 import {GET_ME} from '../utils/queries'
+import {REMOVE_BOOK} from '../utils/mutations'
 
 import { removeBookId } from '../utils/localStorage';
 
 const SavedBooks = () => {
+  const [bookRemoveCount, setBookRemoveCount] = useState(0)
   // const [userData, setUserData] = useState({});
-
-  const { loading, error, data: userData }= useQuery(GET_ME,
+  const [removeBook, { error: bookError, data: bookData }] = useMutation(REMOVE_BOOK);
+  const { loading, error: userError, data: userData }= useQuery(GET_ME,
     // !changed fetch policy so that a query to the API is forced.
     // !not does not rely on cache, but will still update cache
-    { fetchPolicy: "network-only" }
+    // { fetchPolicy: "network-only" }
   );
-  // const { loading, error, data } = useQuery(GET_ME);
-
-//   useEffect(() => {
-//     if (data) {
-//         console.log('tried to setUserData??>');
-//         setUserData(data.me);
-//     }
-// }, [data])
-
-  // console.log('usr data: ', userData);
-  // console.log('strt data: ', data?.me);
-  // const myUserData = data.me
-
-
-
-
-  // !check user is loggen in? reqd?
-
-  // ! double check this
-  // use this to determine if `useEffect()` hook needs to run again
-  // const userDataLength = Object.keys(userData).length;
-
-  // useEffect(() => {
-  //   const getUserData = async () => {
-  //     try {
-  //       console.log(data);
-  //       setUserData(data.me);
-  //     } catch (error) {
-  //       console.error(error)
-  //     }
-  //   }
-  // }, [userDataLength]);
 
   // create function that accepts the book's mongo _id value as param and deletes the book from the database
-  // const handleDeleteBook = async (bookId) => {
-  //   const token = Auth.loggedIn() ? Auth.getToken() : null;
+  const handleDeleteBook = async (bookId) => {
+    // const token = Auth.loggedIn() ? Auth.getToken() : null;
 
-  //   if (!token) {
-  //     return false;
-  //   }
+    // if (!token) {
+    //   return false;
+    // }
 
-  //   try {
-  //     const response = await deleteBook(bookId, token);
+    try {
+      console.log(bookId);
+      const bookData = removeBook({
+        variables: { bookId }
+      });
+      if (!bookData) {
+        throw new Error('something went wrong!');
+      }
+      // upon success, remove book's id from localStorage
+      removeBookId(bookId);
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
-  //     if (!response.ok) {
-  //       throw new Error('something went wrong!');
-  //     }
-
-  //     const updatedUser = await response.json();
-  //     setUserData(updatedUser);
-  //     // upon success, remove book's id from localStorage
-  //     removeBookId(bookId);
-  //   } catch (err) {
-  //     console.error(err);
-  //   }
-  // };
-
-  // if data isn't here yet, say so
   // ! added error handling
-  if (error) {
-    return <h2>{error.message}</h2>;
+  if (userError) {
+    return <h2>{userError.message}</h2>;
   }
 
 
@@ -87,6 +55,7 @@ const SavedBooks = () => {
   }
 
   if (userData)
+
     return (
     <>
       <Jumbotron fluid className='text-light bg-dark'>
@@ -109,9 +78,9 @@ const SavedBooks = () => {
                   <Card.Title>{book.title}</Card.Title>
                   <p className='small'>Authors: {book.authors}</p>
                   <Card.Text>{book.description}</Card.Text>
-                  {/* <Button className='btn-block btn-danger' onClick={() => handleDeleteBook(book.bookId)}>
+                  <Button className='btn-block btn-danger' onClick={() => handleDeleteBook(book.bookId)}>
                     Delete this Book!
-                  </Button> */}
+                  </Button>
                 </Card.Body>
               </Card>
             );
