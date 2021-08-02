@@ -42,10 +42,6 @@ const LoginForm = () => {
       }
 
       const { token, user } = data.login;
-      console.log(data);
-
-      console.log('user: ' ,user);
-      console.log('token: ',token)
       Auth.login(token);
     } catch (err) {
       console.error(err);
